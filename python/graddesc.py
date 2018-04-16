@@ -1,54 +1,55 @@
-#This is the training set that will be used for regression
-#Based on this data, the program will fit the best straight line for the data
-training_set = [[1, 15], [2, 46], [3, 12], [4, 48], [5, 78]]
-m = len(training_set)
+#This is the learning rate. Higher value may cause divergence
+alpha = 0.03
 
-#We have to find a and b using gradient descent
-#Define the hypothesis function.
-def h(x, a, b):
-	return a + b*x 
+#The data for running gradient descent. The format is data = [[x data], [y data]]
+data = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1.33, 1.41, 1.49, 1.57, 1.65, 1.73, 1.81, 1.89, 1.97, 2.05]]
 
-#This is the cost function. Our main objective is to reduce this cost
-def J(a, b):
-	ss = 0 #Sum of square of errors
-	for data in training_set:
-		temp = (h(data[0], a, b) - data[1])
-		ss += temp*temp 
-	return 1/(2*m)*ss
+#Number of both data must be same
+if len(data[0]) != len(data[1]):
+    raise ValueError
 
-#This is partial derivative of cost function with respect to a
-def daJ(a, b):
-	s = 0
-	for data in training_set:
-		s += h(data[0], a, b) - data[1]
-	return 1/m*s
+#The number of datasets
+m = len(data[0])
 
-#This is partial derivative of cost function with respect to b
-def dbJ(a, b):
-	s = 0
-	for data in training_set:
-		s += (h(data[0], a, b) - data[1])*data[0]
-	return 1/m*s
+#Runs univariate gradientDescent on the given data
+def gradientDescent(data):
+    #Parameters theta0 and theta1
+    theta = [0, 0]
+    temp = [10, 10]
 
-#The gradient descent algorithm
-def gradientDescent():
-	learning_rate = 0.1
-	a = 0
-	b = 0
-	for i in range(1000):
-		aTemp = a - learning_rate * daJ(a, b) #Temporary variables required as both 'a' and 'b' must be
-		bTemp = b - learning_rate * dbJ(a, b) #updated simultaneously.
-		a = aTemp
-		b = bTemp
-	return a, b
+    #Set the margin of error as epsilon
+    epsilon = 0.00001
 
-#Test function for the algorithm
+    iterations = 0
+    converged = False
+
+    #Iterate until convergence
+    while not converged:
+        iterations += 1
+        #calculating the gradients for theta0 and theta1
+        grad0 = sum([(theta[0] + theta[1] * data[0][x] - data[1][x])*1 for x in range(m)])
+        grad1 = sum([(theta[0] + theta[1] * data[0][x] - data[1][x])*data[0][x] for x in range(m)])
+
+        #First need to set values in temporary variables as we must update theta0 and theta1 simultaneously
+        temp[0] = theta[0] - alpha/m * grad0
+        temp[1] = theta[1] - alpha/m * grad1
+
+        #check for convergence
+        if (abs(temp[0] - theta[0]) < epsilon) and (abs(temp[1] - theta[1]) < epsilon):
+            print("iterations = ", iterations)
+            converged = True
+
+        #Update theta0 and theta1
+        theta[0], theta[1] = temp[0], temp[1]
+    return theta
+
+#Driver function to test gradientDescent
 def main():
-	a, b = gradientDescent()
-	print("{:.4f}x + {:.4f}".format(b, a))
+    theta = gradientDescent(data)
+    if theta[0] < 0:
+        print("%.2fx - %.2f" % (theta[1], -theta[0]))
+    else:
+        print("%.2fx + %.2f" % (theta[1], theta[0]))
 
 if __name__ == '__main__':
-	main()
-
-
-
+    main()

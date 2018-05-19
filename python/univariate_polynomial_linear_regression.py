@@ -8,6 +8,7 @@ dataset = pd.read_csv('datasets/Position_Salaries.csv')
 print(dataset.head())
 X = dataset.iloc[:, 1:-1].values# We only need the level column
 y = dataset.iloc[:, -1].values
+X_original = dataset.iloc[:, 1:-1].values
 
 # Add quadratic term to X
 X = np.hstack([X, X ** 2])
@@ -37,7 +38,18 @@ pred_sk = regressor.predict(X)
 w = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(y)
 pred = X.dot(w)
 
-plt.scatter(X[:, 1], pred_sk, color = 'red')
+plt.scatter(X[:, 1], y, color = 'red')
 plt.plot(X[:, 1], pred_sk, color = 'green')
 plt.plot(X[:, 1], pred, color = 'blue')
+plt.title('Quadratic model')
 plt.show()
+
+regressor_linear = LinearRegression()
+regressor_linear.fit(X_original, y)
+pred_lr = regressor_linear.predict(X_original)
+
+plt.title('Linear model')
+plt.scatter(X_original, y, color = 'red')
+plt.plot(X_original, pred_lr, color = 'blue')
+plt.show()
+

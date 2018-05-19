@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Import the dataset
-dataset = pd.read_csv('Salary_Data.csv')
+dataset = pd.read_csv('datasets/Salary_Data.csv')
 dataset = dataset.as_matrix()
 X = dataset[:, :-1]
 y = dataset[:, -1]

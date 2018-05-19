@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Import the dataset
-dataset = pd.read_csv('50_Startups.csv')
+dataset = pd.read_csv('datasets/50_Startups.csv')
 print(dataset.head())
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, -1].values
@@ -33,8 +33,6 @@ predictions_sklearn = regressor.predict(x_test)
 # Predicting using normal equation
 w = np.linalg.inv(x_train.T.dot(x_train)).dot(x_train.T).dot(y_train)
 test_predictions = x_test.dot(w)
-
-print('Error of the predictions is: {}%'.format(np.abs(np.sum((test_predictions - y_test)/y_test)) * 100))
 
 error = np.mean(np.abs(test_predictions - predictions_sklearn)) * 100
 print("Error between predictions of sklearn and normal equation is: {} %".format(error) )

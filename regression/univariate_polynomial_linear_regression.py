@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Importing the dataset
-dataset = pd.read_csv('datasets/Position_Salaries.csv')
+dataset = pd.read_csv('../datasets/Position_Salaries.csv')
 print(dataset.head())
 X = dataset.iloc[:, 1:-1].values# We only need the level column
 y = dataset.iloc[:, -1].values
